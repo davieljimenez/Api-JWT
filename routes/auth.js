@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const User = require("../models/User")
-const Joi = require("@hapi/joi")
+const bcrypt = require("bcrypt")
 
+
+const Joi = require("@hapi/joi")
 const schemaRegister = Joi.object({
     name: Joi.string().min(1).max(255).required(),
     email: Joi.string().min(6).max(255).required().email(),
@@ -21,10 +23,13 @@ router.post("/register", async(req, res) => {
         return res.status(400).json({ error: true, mensaje: "El email ingresado ya posee una cuenta creada" })
     }
 
+    const saltos = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(req.body.password, saltos)
+
     const user = new User({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: password
     })
     try {
 
