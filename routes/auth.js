@@ -10,6 +10,37 @@ const schemaRegister = Joi.object({
     password: Joi.string().min(8).max(1024).required()
 })
 
+const schemaLogin = Joi.object({
+    email: Joi.string().min(6).max(255).required().email(),
+    password: Joi.string().min(8).max(1024).required()
+})
+
+router.post("/login", async(req, res) => {
+    //Validaciones:
+    const { error } = schemaLogin.validate(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message })
+    }
+
+    const user = await User.findOne({ email: req.body.email })
+    if (!user) {
+        return res.status(400).json({ error: true, mensaje: "Usuario no encontrado" })
+    }
+
+    const passValida = await bcrypt.compare(req.body.password, user.password)
+    if (!passValida) {
+        return res.status(400).json({ error: true, mensaje: "Contraseña incorrecta" })
+    }
+
+    res.json({
+        error: null,
+        mensaje: "Bienvenido"
+    })
+
+
+
+})
+
 router.post("/register", async(req, res) => {
 
     //Validaciones de usuario
