@@ -13,11 +13,11 @@ const userSchema = mongoose.Schema({
         min: 6,
         max: 255
     },
-    email: {
+    password: {
         type: String,
         required: true,
-        min: 6,
-        max: 255
+        min: 8,
+        max: 1024
     },
     date: {
         type: Date,
