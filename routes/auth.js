@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User")
 const bcrypt = require("bcrypt")
-
+const jwt = require("jsonwebtoken")
 
 const Joi = require("@hapi/joi")
 const schemaRegister = Joi.object({
@@ -32,9 +32,16 @@ router.post("/login", async(req, res) => {
         return res.status(400).json({ error: true, mensaje: "Contraseña incorrecta" })
     }
 
+    //Crear TOKEN:
+    const token = jwt.sign({
+        name: user.name,
+        id: user._id
+    }, process.env.TOKEN_SECRET)
+
     res.json({
         error: null,
-        mensaje: "Bienvenido"
+        mensaje: "Bienvenido",
+        token
     })
 
 
