@@ -19,11 +19,13 @@ mongoose.connect(uri, option)
 
 //importar rutas:
 const authRoutes = require("./routes/auth");
-const { options } = require("./routes/auth");
+const validaToken = require("./routes/validate-tokens");
+const admin = require("./routes/admin")
+
 
 //routes middlewares:
 app.use("/api/user", authRoutes);
-
+app.use("/api/admin", validaToken, admin)
 app.get("/", (req, res) => {
     res.json({
         estado: true,
