@@ -5,7 +5,15 @@ require("dotenv").config();
 
 const app = express();
 
-//Capturar cosas del bod
+//cors
+const cors = require("cors")
+var corsOptions = {
+    origin = "*", // Reemplazar con dominio
+    optionSuccessStatus: 200
+}
+
+app.use(cors(corsOptions))
+    //Capturar cosas del bod
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
